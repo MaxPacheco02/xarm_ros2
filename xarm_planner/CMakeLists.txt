@@ -32,7 +32,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(xarm_msgs REQUIRED)
 
-set(dependencies "rclcpp" "std_msgs" "geometry_msgs" "moveit_msgs" "xarm_msgs" "moveit")
+set(dependencies "rclcpp" "std_msgs" "geometry_msgs" "moveit_msgs" "xarm_msgs" "moveit" "visualization_msgs")
 
 include_directories(
   include
@@ -54,6 +54,20 @@ ament_target_dependencies(xarm_planner_node
 target_link_libraries(xarm_planner_node 
   xarm_planner
   ${ament_LIBRARIES}
+)
+
+add_executable(xarm_follow_pose src/xarm_follow_pose.cpp)
+ament_target_dependencies(xarm_follow_pose
+  ${dependencies}
+)
+target_link_libraries(xarm_follow_pose 
+  xarm_planner
+  ${ament_LIBRARIES}
+)
+
+add_executable(trajectory_planner src/trajectory_planner.cpp)
+ament_target_dependencies(trajectory_planner
+  ${dependencies}
 )
 
 add_executable(xarm_gripper_planner_node src/xarm_gripper_planner_node.cpp)
@@ -139,6 +153,8 @@ install(
 
 install(
   TARGETS 
+  xarm_follow_pose
+  trajectory_planner
   xarm_planner
   xarm_planner_node
   xarm_gripper_planner_node

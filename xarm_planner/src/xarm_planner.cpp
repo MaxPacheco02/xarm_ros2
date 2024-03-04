@@ -14,6 +14,10 @@ const double eef_step = 0.005;
 const double max_velocity_scaling_factor = 0.3;  // [move_group_interface] default is 0.1
 const double max_acceleration_scaling_factor = 0.1;  // [move_group_interface] default is 0.1
 
+XArmPlanner::XArmPlanner()
+{
+}
+
 XArmPlanner::XArmPlanner(const rclcpp::Node::SharedPtr& node, const std::string& group_name)
     : node_(node)
 {
@@ -103,4 +107,13 @@ bool XArmPlanner::executePath(bool wait)
         RCLCPP_ERROR(node_->get_logger(), "executePath: execute failed, wait=%d, MoveItErrorCode=%d", wait, code.val);
     return success;
 }
+
+bool XArmPlanner::operator=(const XArmPlanner &other) {
+    this->node_ = other.node_;
+    this->move_group_ = other.move_group_;
+    this->xarm_plan_ = other.xarm_plan_;
+    this->is_trajectory_ = other.is_trajectory_;
+    return true;
+}
+
 }

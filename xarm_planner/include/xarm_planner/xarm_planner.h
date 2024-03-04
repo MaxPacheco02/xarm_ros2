@@ -30,6 +30,7 @@ namespace xarm_planner
     class XArmPlanner
     {
     public:
+        XArmPlanner();
         XArmPlanner(const rclcpp::Node::SharedPtr& node, const std::string& group_name);
         XArmPlanner(const std::string& group_name);
         ~XArmPlanner() {};
@@ -40,6 +41,7 @@ namespace xarm_planner
         bool planCartesianPath(const std::vector<geometry_msgs::msg::Pose>& pose_target_vector);
 
         bool executePath(bool wait = true);
+        bool operator=(const XArmPlanner &);
     private:
         void init(const std::string& group_name);
 
