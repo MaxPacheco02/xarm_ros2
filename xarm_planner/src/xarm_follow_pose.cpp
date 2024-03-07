@@ -28,13 +28,10 @@ int main(int argc, char** argv)
     node = rclcpp::Node::make_shared("xarm_follow_pose", node_options);
     planner = xarm_planner::XArmPlanner(node, x_name);
 
-    RCLCPP_INFO(node->get_logger(), "xarm_follow_pose node start");
-
     rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr target_pose_sub;
     target_pose_sub = node->create_subscription<nav_msgs::msg::Path>(
         "/xarm_planned_path", 10, update);
 
     rclcpp::spin(node);
-    RCLCPP_INFO(node->get_logger(), "xarm_follow_pose over");
     return 0;
 }
