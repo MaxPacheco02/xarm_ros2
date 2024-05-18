@@ -58,6 +58,6 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        robot_rviz_launch,
+        # robot_rviz_launch,
         robot_planner_node_launch,
     ])
