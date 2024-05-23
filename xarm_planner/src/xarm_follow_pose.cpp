@@ -2,6 +2,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
 
 using namespace std::chrono_literals;
 
@@ -20,6 +22,14 @@ void update(const nav_msgs::msg::Path & msg){
     }
 }
 
+void updateObj(const geometry_msgs::msg::PoseStamped & msg){
+
+    RCLCPP_INFO(node->get_logger(), "Object: %lf, %lf, %lf", msg.pose.position.x, msg.pose.position.y, msg.pose.position.z);
+    planner.planPoseTarget(msg.pose);
+    planner.executePath();
+    rclcpp::sleep_for(150ms);
+}
+
 int main(int argc, char** argv)
 {
     rclcpp::init(argc, argv);
@@ -28,9 +38,13 @@ int main(int argc, char** argv)
     node = rclcpp::Node::make_shared("xarm_follow_pose", node_options);
     planner = xarm_planner::XArmPlanner(node, x_name);
 
-    rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr target_pose_sub;
-    target_pose_sub = node->create_subscription<nav_msgs::msg::Path>(
-        "/xarm_planned_path", 10, update);
+    //rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr target_pose_sub;
+    //target_pose_sub = node->create_subscription<nav_msgs::msg::Path>(
+    //    "/xarm_planned_path", 10, update);
+
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr obj_pos_sub;
+    obj_pos_sub = node->create_subscription<geometry_msgs::msg::PoseStamped>(
+        "/xarm_obj_pose", 10, updateObj);
 
     rclcpp::spin(node);
     return 0;
